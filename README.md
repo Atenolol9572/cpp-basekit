@@ -15,9 +15,9 @@
 │       └── myLogLib.lib        # Release 模式生成的静态库
 ├── bin/
 │   ├── Debug/
-│   │   └── test_github.exe     # Debug 模式生成的可执行文件
+│   │   └── cpp-basekit.exe     # Debug 模式生成的可执行文件
 │   └── Release/
-│       └── test_github.exe     # Release 模式生成的可执行文件
+│       └── cpp-basekit.exe     # Release 模式生成的可执行文件
 ├── myLog/
 │   ├── CMakeLists.txt          # 日志模块构建配置
 │   └── src/
