@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.10)
+project(myLogLib VERSION 2.0.0)
+
+set(CMAKE_CXX_STANDARD 11)
+set(BUILD_SHARED_LIBS OFF)
+
+set(SOURCES
+        src/myLog.cpp
+        src/myLog.h
+        src/myLogLib.cpp)
+
+if (BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    add_library(${PROJECT_NAME} SHARED ${SOURCES})
+else ()
+    add_library(${PROJECT_NAME} STATIC ${SOURCES})
+endif ()
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        OUTPUT_NAME ${PROJECT_NAME}
+        OUTPUT_NAME_DEBUG ${PROJECT_NAME}_debug
+        OUTPUT_NAME_RELEASE ${PROJECT_NAME}
+        OUTPUT_NAME_RELWITHDEBINFO ${PROJECT_NAME}
+        OUTPUT_NAME_MINSIZEREL ${PROJECT_NAME})
+
+foreach(CONFIG_TYPE Debug Release RelWithDebInfo MinSizeRel)
+    string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/lib/${CONFIG_TYPE}
+            LIBRARY_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/lib/${CONFIG_TYPE}
+            RUNTIME_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/bin/${CONFIG_TYPE})
+endforeach()
