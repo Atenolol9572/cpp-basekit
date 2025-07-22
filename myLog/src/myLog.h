@@ -13,7 +13,6 @@
 
 #include <atomic>
 #include <condition_variable>
-#include <fstream>
 #include <map>
 #include <mutex>
 #include <queue>
@@ -48,12 +47,12 @@ namespace myLogLib
         void pushLogRecord(const LogRecord& record);
 
     private:
+        FILE* m_file;
         std::atomic_bool m_bRun;
         std::thread* m_thread;
         std::mutex _muThread, _muFifo;
         std::condition_variable _cv;
         std::queue<LogRecord> m_queue;
-        std::ofstream m_stream;
         std::map<LogLevel, std::string> m_map;
 
         static bool getProgramNameAndPath(std::string& programPath, std::string& programName);

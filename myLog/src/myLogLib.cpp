@@ -4,7 +4,6 @@
 #include <chrono>
 #include <cstdarg>
 #include <iomanip>
-#include <sstream>
 #include <utility>
 
 #include <Windows.h>
@@ -34,20 +33,15 @@ namespace myLogLib
             return;
         }
         va_end(args);
-        const auto now = std::chrono::system_clock::now();
-        const std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
-        std::tm localTime{};
-        void(localtime_s(&localTime, &currentTime));
-        auto duration = now.time_since_epoch();
-        auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration) % 1000;
-        std::ostringstream str;
-        str << std::put_time(&localTime, "[%Y-%m-%d %H:%M:%S") << '.' << std::setw(3) << std::setfill('0') <<
-            milliseconds.
-            count() << "]";
+        SYSTEMTIME st;
+        GetLocalTime(&st);
+        char timeStr[64];
+        snprintf(timeStr, sizeof(timeStr), "[%04d-%02d-%02d %02d:%02d:%02d.%03d]",
+                 st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
         LogRecord record;
         record.level = level;
-        record.currentTime = str.str();
-        size_t lastSlashPos = file.find_last_of("/\\");
+        record.currentTime = timeStr;
+        const size_t lastSlashPos = file.find_last_of("/\\");
         if (lastSlashPos != std::string::npos)
             record.file = file.substr(lastSlashPos + 1);
         else
