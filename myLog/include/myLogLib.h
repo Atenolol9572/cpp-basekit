@@ -3,31 +3,6 @@
 
 #include <string>
 
-#ifndef LOG_INFO
-#define LOG_INFO(Format, ...) \
-myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_INFO, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
-#endif
-
-#ifndef LOG_DEBUG
-#define LOG_DEBUG(Format, ...) \
-myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_DEBUG, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
-#endif
-
-#ifndef LOG_WARNING
-#define LOG_WARNING(Format, ...) \
-myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_WARNING, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
-#endif
-
-#ifndef LOG_ERROR
-#define LOG_ERROR(Format, ...) \
-myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_ERROR, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
-#endif
-
-#ifndef LOG_FATAL
-#define LOG_FATAL(Format, ...) \
-myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_FATAL, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
-#endif
-
 namespace myLogLib
 {
     class Log;
@@ -58,5 +33,30 @@ namespace myLogLib
         Log* m_log;
     };
 } // namespace myLogLib
+
+#ifndef LOG_INFO
+#define LOG_INFO(Format, ...) \
+myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_INFO, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
+#endif
+
+#ifndef LOG_DEBUG
+#define LOG_DEBUG(Format, ...) \
+myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_DEBUG, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
+#endif
+
+#ifndef LOG_WARNING
+#define LOG_WARNING(Format, ...) \
+myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_WARNING, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
+#endif
+
+#ifndef LOG_ERROR
+#define LOG_ERROR(Format, ...) \
+myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_ERROR, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
+#endif
+
+#ifndef LOG_FATAL
+#define LOG_FATAL(Format, ...) \
+myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_FATAL, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
+#endif
 
 #endif // MYLOG_LIBRARY_H
