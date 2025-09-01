@@ -6,24 +6,24 @@
 .
 ├── CMakeLists.txt              # 项目主构建配置
 ├── README.md                   # 项目说明文档
-├── include/
-│   └── myLogLib.h              # 日志库对外接口头文件
-├── lib/
-│   ├── Debug/
-│   │   └── myLogLib_debug.lib  # Debug 模式生成的静态库
-│   └── Release/
-│       └── myLogLib.lib        # Release 模式生成的静态库
-├── bin/
-│   ├── Debug/
-│   │   └── cpp-basekit.exe     # Debug 模式生成的可执行文件
-│   └── Release/
-│       └── cpp-basekit.exe     # Release 模式生成的可执行文件
 ├── myLog/
 │   ├── CMakeLists.txt          # 日志模块构建配置
+│   ├── include/
+│   │   └── myLogLib.h          # 日志库对外接口头文件
 │   └── src/
 │       ├── myLog.cpp           # 日志模块实现
 │       ├── myLog.h             # 日志模块头文件
 │       └── myLogLib.cpp        # 日志库接口实现
+├── lib/
+│   ├── Debug_Windows_MSVC_v1900_x64/
+│   │   └── myLogLib_debug.lib  # Debug模式(MSVC)生成的静态库
+│   └── Release_Windows_MSVC_v1900_x64/
+│       └── myLogLib.lib        # Release模式(MSVC)生成的静态库
+├── bin/
+│   ├── Debug_Windows_MSVC_v1900_x64/
+│   │   └── cpp-basekit.exe     # Debug模式(MSVC)生成的可执行文件
+│   └── Release_Windows_MSVC_v1900_x64/
+│       └── cpp-basekit.exe     # Release模式(MSVC)生成的可执行文件
 ├── src/
 │   └── main.cpp                # 主程序入口
 ```

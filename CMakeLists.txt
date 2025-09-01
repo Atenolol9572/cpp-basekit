@@ -3,16 +3,13 @@ project(cpp-basekit VERSION 2.0.0)
 
 set(CMAKE_CXX_STANDARD 11)
 
-foreach(CONFIG_TYPE Debug Release RelWithDebInfo MinSizeRel)
-    string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CONFIG_TYPE})
-endforeach()
+include(${CMAKE_SOURCE_DIR}/cmake/buildSupport.cmake)
+detect_toolchain_suffix(TOOLCHAIN_SUFFIX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/$<CONFIG>_${TOOLCHAIN_SUFFIX}")
 
 add_subdirectory(myLog)
 
-add_executable(${PROJECT_NAME}
-        src/main.cpp)
+add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE myLogLib)
