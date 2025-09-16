@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(myLogLib VERSION 2.0.0)
+set(PROJECT_NAME_CHINESE "ÈÕÖ¾×«Ð´¿â")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,11 +10,13 @@ option(${PROJECT_NAME_UPPER}_BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 detect_toolchain_suffix(TOOLCHAIN_SUFFIX)
+generate_version_rc(RC_FILES)
 
 set(SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/myLog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/myLog.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/myLogLib.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/myLogLib.cpp
+        ${RC_FILES})
 
 if (${PROJECT_NAME_UPPER}_BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
