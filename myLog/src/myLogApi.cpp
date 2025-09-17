@@ -1,5 +1,5 @@
 #include <ctime>
-#include <myLogLib.h>
+#include <myLogApi.h>
 
 #include <chrono>
 #include <cstdarg>

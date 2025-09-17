@@ -1,5 +1,5 @@
-#ifndef MYLOG_LIBRARY_H
-#define MYLOG_LIBRARY_H
+#ifndef MY_LOG_LIB_API_H
+#define MY_LOG_LIB_API_H
 
 #include <string>
 
@@ -32,7 +32,7 @@ namespace myLogLib
         ~myLog();
         Log* m_log;
     };
-} // namespace myLogLib
+}
 
 #ifndef LOG_INFO
 #define LOG_INFO(Format, ...) \
@@ -59,4 +59,4 @@ myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_ERROR, __FILE__,
 myLogLib::myLog::GetInstance().writeLog(myLogLib::LogLevel::LOG_FATAL, __FILE__, __LINE__, __func__, Format, ##__VA_ARGS__)
 #endif
 
-#endif // MYLOG_LIBRARY_H
+#endif

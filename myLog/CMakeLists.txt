@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(myLogLib VERSION 2.0.0)
+project(myLog VERSION 2.0.0)
 set(PROJECT_NAME_CHINESE "ÈÕÖ¾×«Ð´¿â")
 
 set(CMAKE_CXX_STANDARD 11)
@@ -15,28 +15,55 @@ generate_version_rc(RC_FILES)
 set(SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/myLog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/myLog.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/myLogLib.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/myLogApi.cpp
         ${RC_FILES})
 
 if (${PROJECT_NAME_UPPER}_BUILD_SHARED_LIBS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    if (WIN32 AND NOT MSVC)
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif ()
     add_library(${PROJECT_NAME} SHARED ${SOURCES})
-    string(REPLACE "/GR" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    string(REPLACE "/GR-" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-    if (IS_MULTI_CONFIG)
-        target_compile_options(${PROJECT_NAME} PRIVATE
-                $<$<CONFIG:Release>:/O2 /GR- /EHsc>)
-        target_link_options(${PROJECT_NAME} PRIVATE
-                $<$<CONFIG:Release>:/DEBUG:NONE /OPT:REF /OPT:ICF>)
+    if (MSVC)
+        string(REPLACE "/GR" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REPLACE "/GR-" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        if (IS_MULTI_CONFIG)
+            target_compile_options(${PROJECT_NAME} PRIVATE
+                    $<$<CONFIG:Release>:/O2 /GR- /EHsc>)
+            target_link_options(${PROJECT_NAME} PRIVATE
+                    $<$<CONFIG:Release>:/DEBUG:NONE /OPT:REF /OPT:ICF>)
+        else ()
+            if (CMAKE_BUILD_TYPE STREQUAL "Release")
+                target_compile_options(${PROJECT_NAME} PRIVATE /O2 /GR- /EHsc)
+                target_link_options(${PROJECT_NAME} PRIVATE /DEBUG:NONE /OPT:REF /OPT:ICF)
+            endif ()
+        endif ()
     else ()
-        if (CMAKE_BUILD_TYPE STREQUAL "Release")
-            target_compile_options(${PROJECT_NAME} PRIVATE /O2 /GR- /EHsc)
-            target_link_options(${PROJECT_NAME} PRIVATE /DEBUG:NONE /OPT:REF /OPT:ICF)
+        if (IS_MULTI_CONFIG)
+            target_compile_options(${PROJECT_NAME} PRIVATE
+                    $<$<CONFIG:Release>:-O3 -s -fvisibility=hidden -frename-registers -fno-plt  )
+            target_link_options(${PROJECT_NAME} PRIVATE
+                    $<$<CONFIG:Release>:-Wl,--strip-all)
+        else ()
+            if (CMAKE_BUILD_TYPE STREQUAL "Release")
+                target_compile_options(${PROJECT_NAME} PRIVATE -O3 -s -fvisibility=hidden -frename-registers -fno-plt)
+                set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,--strip-all")
+            endif ()
         endif ()
     endif ()
 else ()
     add_library(${PROJECT_NAME} STATIC ${SOURCES})
 endif ()
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:_DEBUG>)
+
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME}
+        EXPORT_MACRO_NAME ${PROJECT_NAME_UPPER}_API
+        EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Api_global.h"
+        STATIC_DEFINE ${PROJECT_NAME_UPPER}_STATIC)
+target_include_directories(${PROJECT_NAME} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        $<INSTALL_INTERFACE:include>)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

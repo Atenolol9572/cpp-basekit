@@ -9,16 +9,16 @@
 ├── myLog/
 │   ├── CMakeLists.txt          # 日志模块构建配置
 │   ├── include/
-│   │   └── myLogLib.h          # 日志库对外接口头文件
+│   │   └── myLogApi.h          # 日志库对外接口头文件
 │   └── src/
 │       ├── myLog.cpp           # 日志模块实现
 │       ├── myLog.h             # 日志模块头文件
-│       └── myLogLib.cpp        # 日志库接口实现
+│       └── myLogApi.cpp        # 日志库接口实现
 ├── lib/
 │   ├── Debug_Windows_MSVC_v1900_x64/
-│   │   └── myLogLib_debug.lib  # Debug模式(MSVC)生成的静态库
+│   │   └── myLogd.lib          # Debug模式(MSVC)生成的静态库
 │   └── Release_Windows_MSVC_v1900_x64/
-│       └── myLogLib.lib        # Release模式(MSVC)生成的静态库
+│       └── myLog.lib           # Release模式(MSVC)生成的静态库
 ├── bin/
 │   ├── Debug_Windows_MSVC_v1900_x64/
 │   │   └── cpp-basekit.exe     # Debug模式(MSVC)生成的可执行文件

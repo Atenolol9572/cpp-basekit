@@ -8,7 +8,7 @@
  * @copyright
  */
 
-#include <myLogLib.h>
+#include <myLogApi.h>
 
 int main()
 {

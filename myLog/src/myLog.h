@@ -19,7 +19,7 @@
 #include <string>
 #include <thread>
 
-#include <myLogLib.h>
+#include <myLogApi.h>
 
 namespace myLogLib
 {
