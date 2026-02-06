@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(myLog VERSION 2.0.0)
+project(myLog VERSION 3.0.0)
 set(PROJECT_NAME_CHINESE "ÈÕÖ¾×«Ð´¿â")
 
 set(CMAKE_CXX_STANDARD 11)
@@ -67,6 +67,20 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+if (MINGW)
+    target_link_libraries(${PROJECT_NAME} PRIVATE atomic winpthread)
+elseif (CYGWIN OR (UNIX AND NOT APPLE))
+    target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+endif ()
+
+if (UNIX AND NOT APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            INSTALL_RPATH "$ORIGIN"
+            CXX_VISIBILITY_PRESET hidden
+            VISIBILITY_INLINES_HIDDEN YES)
+    target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
+endif ()
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
         OUTPUT_NAME ${PROJECT_NAME}
         OUTPUT_NAME_DEBUG ${PROJECT_NAME}d
@@ -81,3 +95,14 @@ foreach (CONFIG_TYPE Debug Release RelWithDebInfo MinSizeRel)
             LIBRARY_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/lib/${CONFIG_TYPE}_${TOOLCHAIN_SUFFIX}
             RUNTIME_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/bin/${CONFIG_TYPE}_${TOOLCHAIN_SUFFIX})
 endforeach ()
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Api_global.h"
+        DESTINATION "include/myLibrary_${TOOLCHAIN_SUFFIX}")
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        DESTINATION "include/myLibrary_${TOOLCHAIN_SUFFIX}"
+        FILES_MATCHING PATTERN "*.h")
+
+install(TARGETS ${PROJECT_NAME}
+        ARCHIVE DESTINATION "lib/$<CONFIG>_${TOOLCHAIN_SUFFIX}"
+        LIBRARY DESTINATION "lib/$<CONFIG>_${TOOLCHAIN_SUFFIX}"
+        RUNTIME DESTINATION "bin/$<CONFIG>_${TOOLCHAIN_SUFFIX}")

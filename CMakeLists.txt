@@ -3,6 +3,8 @@ project(cpp-basekit VERSION 2.0.0)
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
+
 include(${CMAKE_SOURCE_DIR}/cmake/buildSupport.cmake)
 detect_toolchain_suffix(TOOLCHAIN_SUFFIX)
 

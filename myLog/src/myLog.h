@@ -21,49 +21,58 @@
 
 #include <myLogApi.h>
 
-namespace myLogLib
+enum LogLevel
 {
-    struct LogRecord
-    {
-        LogLevel level;
-        std::string currentTime;
-        std::string file;
-        int line;
-        std::string function;
-        std::string content;
-    };
+    LOG_DEBUG = 0,
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR,
+    LOG_FATAL
+};
 
-    class Log
-    {
-    public:
-        Log();
-        ~Log();
+struct LogRecord
+{
+    LogLevel level = LOG_DEBUG;
+    std::string currentTime;
+    std::string file;
+    int line = 0;
+    std::string function;
+    std::string content;
+};
 
-        Log(Log&& other) = delete;
-        Log(const Log& other) = delete;
-        Log& operator=(Log&& other) = delete;
-        Log& operator=(const Log& other) = delete;
+class myLog
+{
+public:
+    myLog();
+    ~myLog();
 
-        void pushLogRecord(const LogRecord& record);
+    myLog(myLog&& other) = delete;
+    myLog(const myLog& other) = delete;
+    myLog& operator=(myLog&& other) = delete;
+    myLog& operator=(const myLog& other) = delete;
 
-    private:
-        FILE* m_file;
-        std::atomic_bool m_bRun;
-        std::thread* m_thread;
-        std::mutex _muThread, _muFifo;
-        std::condition_variable _cv;
-        std::queue<LogRecord> m_queue;
-        std::map<LogLevel, std::string> m_map;
+    void pushLogRecord(const LogRecord& record);
+    static myLog& getInstance();
 
-        static bool getProgramNameAndPath(std::string& programPath, std::string& programName);
-        static bool buildLogPath(const std::string& programPath, const std::string& programName);
-        bool buildLogFile(const std::string& programPath, const std::string& programName);
-        bool openFile();
-        bool popLogRecord(LogRecord& record);
-        std::string LevelToStr(LogLevel level);
-        static void runLogThread(Log* pParam);
-        void logThread();
-    };
-} // namespace myLogLib
+private:
+    FILE* m_pFile;
+    std::mutex m_muFifo;
+    std::mutex m_muThread;
+    std::atomic_bool m_bRun;
+    std::thread* m_pThread;
+    std::condition_variable m_cvThread;
+    std::queue<LogRecord> m_queue;
+    std::map<LogLevel, std::string> m_map;
+
+    static bool getProgramNameAndPath(std::string& programPath, std::string& programName);
+    static bool buildLogPath(const std::string& programPath, const std::string& programName);
+    bool buildLogFile(const std::string& programPath, const std::string& programName);
+    bool openFile();
+    bool isQueueEmpty();
+    bool popLogRecord(LogRecord& record);
+    std::string levelToStr(LogLevel level);
+    static void runLogThread(myLog* pParam);
+    void logThread();
+};
 
 #endif // MY_LOG_H
